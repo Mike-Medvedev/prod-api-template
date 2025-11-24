@@ -1,14 +1,8 @@
 import express, { json } from "express"
 import { logger } from "./middleware/logger.js"
-import * as z from "zod";
+import { db } from "./db/db.js"
+import { users, UserSchema } from "./db/schema.ts"
 
-const UserSchema = z.object({
-  firstname: z.string(),
-  lastname: z.string(),
-  phone: z.string()
-})
-
-type UserType = z.infer<typeof UserSchema>
 
 const PORT = 3000
 
@@ -25,7 +19,7 @@ app.listen(PORT, (): void => {
     console.log(`Server listening on port ${PORT}`)
 })
 
-app.post("/user", (req, res) => {
+app.post("/user", async (req, res) => {
   const input = req.body["user"];
   if(!input) res.status(422).json({"detail": "unexpected payload"})
   const result = UserSchema.safeParse(input);
@@ -33,7 +27,10 @@ app.post("/user", (req, res) => {
     res.status(422).json({"detail": result.error})
   }
   console.log(result.data)
-  res.status(201).json(result.data)
+  const [newUser] = await db.insert(users)
+      .values(result.data!)
+      .returning();  // Returns the inserted record with generated id
+  res.status(201).json(newUser)
 })
 
 // - User should be able to login
@@ -77,13 +74,13 @@ enum Duration{
 }
 
 
-interface User {
-    userId: string;
-    phoneNumber: number;
-    firstName: string;
-    lastName: string;
-    createdAt: Date;
-  }
+// interface User {
+//     userId: string;
+//     phoneNumber: number;
+//     firstName: string;
+//     lastName: string;
+//     createdAt: Date;
+//   }
   
   interface Commitment {
     commitmentId: string; // uuid
