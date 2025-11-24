@@ -40,7 +40,7 @@ export const users = pgTable('users', {
     .defaultNow(),
 });
 
-export const commitment = pgTable('commitment', {
+export const commitments = pgTable('commitment', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   type: commitmentTypeEnum().notNull(),
@@ -59,10 +59,10 @@ export const commitment = pgTable('commitment', {
 ]);
 
 
-export const commitmentSession = pgTable("commitment_session", {
+export const commitmentSessions = pgTable("commitment_session", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   userId: integer("user_id").references(() => users.id, { onDelete: "cascade" }),
-  commitmentId: integer("commitment_id").references(() => commitment.id, { onDelete: "cascade" }),
+  commitmentId: integer("commitment_id").references(() => commitments.id, { onDelete: "cascade" }),
   startDate: timestamp("start_date", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -82,7 +82,7 @@ export const commitmentSession = pgTable("commitment_session", {
 
 export const motionSamples = pgTable('motion_samples', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  sessionId: integer('session_id').notNull().references(() => commitmentSession.id, { onDelete: 'cascade' }),
+  sessionId: integer('session_id').notNull().references(() => commitmentSessions.id, { onDelete: 'cascade' }),
   capturedAt: timestamp('captured_at', { withTimezone: true }).notNull(),
   intervalMs: integer('interval_ms'),
 
@@ -112,7 +112,7 @@ export const motionSamples = pgTable('motion_samples', {
 
 export const gpsSamples = pgTable('gps_samples', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  sessionId: integer('session_id').notNull().references(() => commitmentSession.id, { onDelete: 'cascade' }),
+  sessionId: integer('session_id').notNull().references(() => commitmentSessions.id, { onDelete: 'cascade' }),
   capturedAt: timestamp('captured_at', { withTimezone: true }).notNull(),
 
   lat: doublePrecision().notNull(),
@@ -127,7 +127,7 @@ export const gpsSamples = pgTable('gps_samples', {
 export const transactions = pgTable('transactions', {
   id: uuid().defaultRandom().primaryKey(),
   userId: integer("user_id").references(() => users.id, { onDelete: "cascade" }),
-  commitmentId: integer("commitment_id").notNull().references(() => commitment.id, { onDelete: "cascade" }),
+  commitmentId: integer("commitment_id").notNull().references(() => commitments.id, { onDelete: "cascade" }),
   transactionType: transactionTypeEnum().notNull(),
   stripeCustomerId: text("stripe_customer_id").notNull(),
   stripeTransactionId: text("stripe_transaction_id").notNull(),
