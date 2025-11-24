@@ -1,15 +1,23 @@
 import express, { json } from "express"
 import { logger } from "./middleware/logger.js"
 import { db } from "./db/db.js"
-import { users, UserSchema } from "./db/schema.ts"
+import { users } from "./db/schema.ts"
+import * as z from "zod"
 
+
+const CreateUserSchema = z.object({
+  firstname: z.string(),
+  lastname: z.string(),
+  phone: z.string()
+})
 
 const PORT = 3000
 
 const app = express();
+app.use(json())
 
 app.use(logger)
-app.use(json())
+
 
 app.get("/", (_, res) => {
     res.send("Hello World")
@@ -22,15 +30,15 @@ app.listen(PORT, (): void => {
 app.post("/user", async (req, res) => {
   const input = req.body["user"];
   if(!input) res.status(422).json({"detail": "unexpected payload"})
-  const result = UserSchema.safeParse(input);
+  const result = CreateUserSchema.safeParse(input);
   if(!result.success){
     res.status(422).json({"detail": result.error})
   }
-  console.log(result.data)
-  const [newUser] = await db.insert(users)
+  const [db_result] = await db.insert(users)
       .values(result.data!)
       .returning();  // Returns the inserted record with generated id
-  res.status(201).json(newUser)
+
+  res.status(201).json(db_result)
 })
 
 // - User should be able to login
@@ -162,3 +170,18 @@ enum Duration{
       [key: string]: unknown; // Allow additional metadata fields
     };
   }
+
+
+  // I want to create a repo that i can fork that setsup the tools that I use to create saas products
+
+  // The first tools are I am going to use node js, express js for the rest api. 
+  // Typescript as my language of choice
+  //Supabase for PostgresQL DB
+  // Supabase for Blob storage
+  // Supabase for Auth
+  //Drizzle for ORM
+  // Zod for runtime validation
+
+  // For front end ill just use JS
+  // tailwind for css and design system
+
