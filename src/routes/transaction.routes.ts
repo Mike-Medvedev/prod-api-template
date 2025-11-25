@@ -2,7 +2,7 @@ import express from "express"
 
 const TransactionRouter = express.Router()
 
-TransactionRouter.get("/", async (req, res) => {
+TransactionRouter.get("/", async (_req, res) => {
     res.json({"data": 0})
 })
 

@@ -1,14 +1,32 @@
+import 'dotenv/config';
 import express, { json } from "express"
+import cors from "cors"
 import { logger } from "./middleware/logger.middleware.ts"
 import { UserRouter, TransactionRouter, CommitmentRouter } from './routes/index.js';
 import errorHandler from "./middleware/error.middleware.ts";
 
 
-const PORT = 3000
+const allowedOrigins = [
+    'http://localhost:5173'
+];
+
+const corsOptions = {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Allow requests with no origin (mobile apps, Postman, etc.)
+        if (!origin) {
+            return callback(null, true);
+        }
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error())
+        }
+    }
+}
 
 const app = express();
 app.use(json())
-
+app.use(cors(corsOptions))
 app.use(logger)
 
 app.use("/users", UserRouter);
@@ -22,8 +40,8 @@ app.get("/", (_, res) => {
     res.send("Hello World")
 })
 
-app.listen(PORT, (): void => {
-    console.log(`Server listening on port ${PORT}`)
+app.listen(process.env.PORT, (): void => {
+    console.log(`Server listening on port ${process.env.PORT}`)
 })
 
 

@@ -2,7 +2,7 @@ import express from "express"
 
 const CommitmentRouter = express.Router()
 
-CommitmentRouter.get("/", async (req, res) => {
+CommitmentRouter.get("/", async (_req, res) => {
     res.json({"data": 0})
 })
 
