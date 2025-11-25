@@ -1,9 +1,9 @@
-import { db } from "../db/db.ts";
+import { db, type DB } from "../db/db.ts";
 import { users } from "../db/schema.ts";
 import { CreateUserModel, type CreateUser } from "../models/user.model.ts";
 
 class UserService{
-    private db: any;
+    private readonly db: DB;
     constructor(){
         this.db = db
     }
