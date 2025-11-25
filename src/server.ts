@@ -1,6 +1,7 @@
 import express, { json } from "express"
-import { logger } from "./middleware/logger.js"
+import { logger } from "./middleware/logger.middleware.ts"
 import { UserRouter, TransactionRouter, CommitmentRouter } from './routes/index.js';
+import errorHandler from "./middleware/error.middleware.ts";
 
 
 const PORT = 3000
@@ -13,6 +14,8 @@ app.use(logger)
 app.use("/users", UserRouter);
 app.use("/transactions" ,TransactionRouter);
 app.use("/commitments",CommitmentRouter);
+
+app.use(errorHandler)
 
 
 app.get("/", (_, res) => {
