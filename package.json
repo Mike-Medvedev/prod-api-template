@@ -20,6 +20,7 @@
     "drizzle-zod": "^0.8.3",
     "express": "^5.1.0",
     "postgres": "^3.4.7",
+    "winston": "^3.18.3",
     "zod": "^4.1.12"
   },
   "devDependencies": {

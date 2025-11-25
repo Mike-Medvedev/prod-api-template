@@ -1,14 +1,18 @@
 import 'dotenv/config';
 import express, { json } from "express"
 import cors from "cors"
-import { logger } from "./middleware/logger.middleware.ts"
+import { requestLogger } from "./middleware/logger.middleware.ts"
 import { UserRouter, TransactionRouter, CommitmentRouter } from './routes/index.js';
 import errorHandler from "./middleware/error.middleware.ts";
+import logger from "./logger/logger.js";
 
 
-const allowedOrigins = [
-    'http://localhost:5173'
-];
+const allowedOrigins = process.env.origins!.split(',').map(s => s.trim())
+
+if(!allowedOrigins || allowedOrigins.length === 0) {
+    logger.error('Failed to start: CORS origins environment variable is missing or empty')
+    throw new Error("Cors origin env variables required!")
+}
 
 const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
@@ -27,7 +31,7 @@ const corsOptions = {
 const app = express();
 app.use(json())
 app.use(cors(corsOptions))
-app.use(logger)
+app.use(requestLogger)
 
 app.use("/users", UserRouter);
 app.use("/transactions" ,TransactionRouter);
@@ -41,7 +45,7 @@ app.get("/", (_, res) => {
 })
 
 app.listen(process.env.PORT, (): void => {
-    console.log(`Server listening on port ${process.env.PORT}`)
+    logger.info(`Server listening on port ${process.env.PORT}`)
 })
 
 
@@ -54,19 +58,14 @@ app.listen(process.env.PORT, (): void => {
 // - System should be able to verify completed sessions
 
 
-/**
- * Implement Zod for runtime safety
- * Implement Drizzle for Orm
- * Implement Supabase for tables
- * Use Drizzle for migrations
- * 
- */
 
 
 
 
 
   // I want to create a repo that i can fork that setsup the tools that I use to create saas products
+
+
 
   // The first tools are I am going to use node js, express js for the rest api. 
   // Typescript as my language of choice
@@ -75,6 +74,7 @@ app.listen(process.env.PORT, (): void => {
   // Supabase for Auth
   //Drizzle for ORM
   // Zod for runtime validation
+  //logging with winston
 
   // For front end ill just use JS
   // tailwind for css and design system
