@@ -1,5 +1,5 @@
 import "dotenv/config";
-import "../instrument.js";
+import "../sentry.config.js";
 import express, { json } from "express";
 import cors from "cors";
 import { requestLogger } from "./middleware/logger.middleware.ts";
