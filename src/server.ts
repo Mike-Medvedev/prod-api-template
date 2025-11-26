@@ -7,6 +7,7 @@ import errorHandler from "./middleware/error.middleware.ts";
 import logger from "./logger/logger.ts";
 import { requestContextMiddleware } from "./middleware/request-context.middleware.ts"
 import { client as pgClient } from './db/db.ts';
+import helmet from "helmet"
 
 
 const allowedOrigins = process.env.origins!.split(',').map(s => s.trim())
@@ -20,12 +21,12 @@ const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
         // Allow requests with no origin (mobile apps, Postman, etc.)
         if (!origin) {
-            return callback(null, true);
+        return callback(null, true);
         }
         if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error())
+            callback(new Error(`Origin ${origin} not allowed`))
         }
     }
 }
@@ -33,6 +34,7 @@ const corsOptions = {
 const app = express();
 app.use(json())
 app.use(cors(corsOptions))
+app.use(helmet())
 app.use(requestContextMiddleware)
 app.use(requestLogger)
 
