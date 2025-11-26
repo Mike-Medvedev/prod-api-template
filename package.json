@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx --watch src/server.ts",
+    "build": "esbuild src/server.ts --platform=node --format=esm --outdir=dist --packages=external --sourcemap --outbase=src",
     "types": "tsc",
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate"
@@ -30,6 +31,7 @@
     "@types/pg": "^8.15.6",
     "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.7",
+    "esbuild": "^0.27.0",
     "tsx": "^4.20.6"
   }
 }
