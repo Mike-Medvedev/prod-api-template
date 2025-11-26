@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "../instrument.js";
 import express, { json } from "express";
 import cors from "cors";
 import { requestLogger } from "./middleware/logger.middleware.ts";
@@ -34,9 +35,10 @@ const corsOptions = {
 };
 
 const app = express();
-app.use(json());
-app.use(cors(corsOptions));
 app.use(helmet());
+app.use(cors(corsOptions));
+
+app.use(json());
 app.use(requestContextMiddleware);
 app.use(requestLogger);
 
@@ -44,11 +46,11 @@ app.use("/users", UserRouter);
 app.use("/transactions", TransactionRouter);
 app.use("/commitments", CommitmentRouter);
 
-app.use(errorHandler);
-
 app.get("/", (_, res) => {
   res.send("Hello World");
 });
+
+app.use(errorHandler);
 
 const server = app.listen(process.env.PORT, (): void => {
   logger.info(`Server listening on port ${process.env.PORT}`);
@@ -74,6 +76,12 @@ const shutdown = (signal: string) => {
 };
 
 ["SIGTERM", "SIGINT"].forEach((sig) => process.on(sig, () => shutdown(sig)));
+process.on("unhandledRejection", (reason) => {
+  logger.error({
+    message: "unhandledRejection",
+    err: reason instanceof Error ? reason : new Error(String(reason)),
+  });
+});
 process.on("uncaughtException", (err) => {
   logger.error({ message: "uncaughtException", err });
   shutdown("uncaughtException");

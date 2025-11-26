@@ -3,6 +3,7 @@ import type { ErrorRequestHandler, Request, Response, NextFunction } from "expre
 import { DatabaseError, UnknownError, ZodError } from "../errors/errors.ts";
 import logger from "../logger/logger.ts";
 import z from "zod";
+import * as Sentry from "@sentry/node";
 
 const errorHandler: ErrorRequestHandler = function (
   error,
@@ -10,6 +11,14 @@ const errorHandler: ErrorRequestHandler = function (
   res: Response,
   _next: NextFunction,
 ) {
+  Sentry.captureException(error, {
+    tags: { handler: "errorMiddleware" },
+    extra: {
+      reqId: _req.id,
+      method: _req.method,
+      path: _req.path,
+    },
+  });
   if (error instanceof DrizzleQueryError) {
     const databaseError = new DatabaseError(error);
     if (databaseError?.code === "23505") {

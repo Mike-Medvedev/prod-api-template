@@ -26,6 +26,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@sentry/node": "^10.27.0",
     "cors": "^2.8.5",
     "drizzle-orm": "^0.44.7",
     "drizzle-zod": "^0.8.3",
@@ -33,6 +34,7 @@
     "helmet": "^8.1.0",
     "postgres": "^3.4.7",
     "winston": "^3.18.3",
+    "winston-transport": "^4.9.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

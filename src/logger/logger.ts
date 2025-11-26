@@ -1,9 +1,13 @@
 import { createLogger, format, transports } from "winston";
 import type { TransformableInfo } from "logform";
 import { requestContext } from "../context/request.context.ts";
-import path from "node:path";
+import * as nodePath from "node:path";
+import Transport from "winston-transport";
+import * as Sentry from "@sentry/node";
 
-const logFile = path.resolve(process.cwd(), "log.log");
+const SentryWinstonTransport = Sentry.createSentryWinstonTransport(Transport);
+
+const logFile = nodePath.resolve(process.cwd(), "log.log");
 
 type RequestLogInfo = TransformableInfo & {
   reqId?: string;
@@ -34,10 +38,10 @@ function devFormat(info: RequestLogInfo): string {
 }
 
 const addRequestContext = format((info) => {
-  const { reqId, method, path: reqPath, body } = requestContext.getStore() ?? {};
+  const { reqId, method, path, body } = requestContext.getStore() ?? {};
   return process.env.NODE_ENV === "production"
-    ? { ...info, reqId, method, reqPath }
-    : { ...info, reqId, method, reqPath, body };
+    ? { ...info, reqId, method, path }
+    : { ...info, reqId, method, path, body };
 });
 
 const devLoggerOptions = {
@@ -49,7 +53,7 @@ const devLoggerOptions = {
     format.errors({ stack: true }),
     format.printf(devFormat),
   ),
-  transports: [new transports.Console()],
+  transports: [new transports.Console(), new SentryWinstonTransport()],
 };
 
 const prodLoggerOptions = {
@@ -67,6 +71,7 @@ const prodLoggerOptions = {
   transports: [
     new transports.Console(),
     new transports.File({ filename: logFile, options: { flags: "w" } }),
+    new SentryWinstonTransport(),
   ],
 };
 
