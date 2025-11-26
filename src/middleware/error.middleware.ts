@@ -1,10 +1,15 @@
 import { DrizzleQueryError } from "drizzle-orm/errors";
-import type { ErrorRequestHandler, Request, Response } from "express";
+import type { ErrorRequestHandler, Request, Response, NextFunction } from "express";
 import { DatabaseError, UnknownError, ZodError } from "../errors/errors.ts";
 import logger from "../logger/logger.ts";
 import z from "zod";
 
-const errorHandler: ErrorRequestHandler = function (error, _req: Request, res: Response) {
+const errorHandler: ErrorRequestHandler = function (
+  error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+) {
   if (error instanceof DrizzleQueryError) {
     const databaseError = new DatabaseError(error);
     if (databaseError?.code === "23505") {
