@@ -17,14 +17,14 @@ const errorHandler: ErrorRequestHandler = function (error, _req: Request, res: R
             return res.sendStatus(500);
         }
     }
-    else if (error instanceof ZodError){
-        logger.error({message: "Zod validation error see trace for details", err: {stack: error.stack}})
-        
+    else if (error instanceof ZodError) {
+        logger.error({ message: "Zod validation error see trace for details", err: { stack: error.stack } })
+
         return res.status(422).json({ detail: z.treeifyError(error) });
     }
     else {
         const unknownError = new UnknownError(error)
-        logger.error(unknownError.message);
+        logger.error({ message: unknownError.message, err: unknownError });
     }
     return res.sendStatus(500)
 }

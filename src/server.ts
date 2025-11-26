@@ -6,11 +6,12 @@ import { UserRouter, TransactionRouter, CommitmentRouter } from './routes/index.
 import errorHandler from "./middleware/error.middleware.ts";
 import logger from "./logger/logger.ts";
 import { requestContextMiddleware } from "./middleware/request-context.middleware.ts"
+import { client as pgClient } from './db/db.ts';
 
 
 const allowedOrigins = process.env.origins!.split(',').map(s => s.trim())
 
-if(!allowedOrigins || allowedOrigins.length === 0) {
+if (!allowedOrigins || allowedOrigins.length === 0) {
     logger.error('Failed to start: CORS origins environment variable is missing or empty')
     throw new Error("Cors origin env variables required!")
 }
@@ -36,8 +37,8 @@ app.use(requestContextMiddleware)
 app.use(requestLogger)
 
 app.use("/users", UserRouter);
-app.use("/transactions" ,TransactionRouter);
-app.use("/commitments",CommitmentRouter);
+app.use("/transactions", TransactionRouter);
+app.use("/commitments", CommitmentRouter);
 
 app.use(errorHandler)
 
@@ -46,38 +47,30 @@ app.get("/", (_, res) => {
     res.send("Hello World")
 })
 
-app.listen(process.env.PORT, (): void => {
+
+const server = app.listen(process.env.PORT, (): void => {
     logger.info(`Server listening on port ${process.env.PORT}`)
 })
 
 
+const shutdown = (signal: string) => {
+    logger.info({ message: `Shutting down with signal: ${signal}` });
+    server.close(async (err) => {
+        if (err) {
+            logger.error({ message: 'Error closing server', err });
+            process.exit(1);
+        }
+        try {
+            await pgClient.end(); // close DB pool/client
+        } finally {
+            process.exit(0);
+        }
+    });
+    setTimeout(() => {
+        logger.error({ message: 'Forced shutdown timeout' });
+        process.exit(1);
+      }, 10_000).unref();
+};
 
-// - User should be able to login
-// - Users should be able to create/read/update/delete a commitment
-// - Users should be able add and manage payment methods
-// - Users should be able to stake money on a commitment
-// - Users should be able to record sessions to achieve their commitment
-// - System should be able to verify completed sessions
-
-
-
-
-
-
-
-  // I want to create a repo that i can fork that setsup the tools that I use to create saas products
-
-
-
-  // The first tools are I am going to use node js, express js for the rest api. 
-  // Typescript as my language of choice
-  //Supabase for PostgresQL DB
-  // Supabase for Blob storage
-  // Supabase for Auth
-  //Drizzle for ORM
-  // Zod for runtime validation
-  //logging with winston
-
-  // For front end ill just use JS
-  // tailwind for css and design system
-
+['SIGTERM', 'SIGINT'].forEach((sig) => process.on(sig, () => shutdown(sig)));
+process.on('uncaughtException', (err) => { logger.error({ message: 'uncaughtException', err }); shutdown('uncaughtException'); });
