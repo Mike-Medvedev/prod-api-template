@@ -52,7 +52,7 @@ app.get("/", (_, res) => {
 
 app.use(errorHandler);
 
-const server = app.listen(process.env.PORT, (): void => {
+const server = app.listen(Number(process.env.PORT), "0.0.0.0", (): void => {
   logger.info(`Server listening on port ${process.env.PORT}`);
 });
 

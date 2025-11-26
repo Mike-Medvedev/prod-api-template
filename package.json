@@ -28,6 +28,7 @@
   "dependencies": {
     "@sentry/node": "^10.27.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "drizzle-zod": "^0.8.3",
     "express": "^5.1.0",
@@ -43,7 +44,6 @@
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.6",
-    "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.7",
     "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
