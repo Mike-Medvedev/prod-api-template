@@ -1,9 +1,9 @@
-import express from "express"
+import express from "express";
 
-const TransactionRouter = express.Router()
+const TransactionRouter = express.Router();
 
-TransactionRouter.get("/", async (_req, res) => {
-    res.json({"data": 0})
-})
+TransactionRouter.get("/", (_req, res) => {
+  res.json({ data: 0 });
+});
 
 export default TransactionRouter;

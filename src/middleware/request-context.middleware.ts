@@ -1,6 +1,6 @@
-import { randomUUID } from 'node:crypto';
-import { requestContext } from '../context/request.context.ts';
-import type { Request, Response, NextFunction} from "express"
+import { randomUUID } from "node:crypto";
+import { requestContext } from "../context/request.context.ts";
+import type { Request, Response, NextFunction } from "express";
 
 export function requestContextMiddleware(req: Request, _res: Response, next: NextFunction) {
   const context = {
@@ -9,6 +9,6 @@ export function requestContextMiddleware(req: Request, _res: Response, next: Nex
     path: req.originalUrl,
     body: req.body,
   };
-  req.id = context.reqId
+  req.id = context.reqId;
   requestContext.run(context, next);
 }

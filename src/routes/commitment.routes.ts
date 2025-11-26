@@ -1,9 +1,9 @@
-import express from "express"
+import express from "express";
 
-const CommitmentRouter = express.Router()
+const CommitmentRouter = express.Router();
 
-CommitmentRouter.get("/", async (_req, res) => {
-    res.json({"data": 0})
-})
+CommitmentRouter.get("/", (_req, res) => {
+  res.json({ data: 0 });
+});
 
 export default CommitmentRouter;

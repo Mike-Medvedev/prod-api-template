@@ -85,12 +85,8 @@
           "name": "commitment_user_id_users_id_fk",
           "tableFrom": "commitment",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -212,12 +208,8 @@
           "name": "commitment_session_user_id_users_id_fk",
           "tableFrom": "commitment_session",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -225,12 +217,8 @@
           "name": "commitment_session_commitment_id_commitment_id_fk",
           "tableFrom": "commitment_session",
           "tableTo": "commitment",
-          "columnsFrom": [
-            "commitment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["commitment_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -333,12 +321,8 @@
           "name": "gps_samples_session_id_commitment_session_id_fk",
           "tableFrom": "gps_samples",
           "tableTo": "commitment_session",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -495,12 +479,8 @@
           "name": "motion_samples_session_id_commitment_session_id_fk",
           "tableFrom": "motion_samples",
           "tableTo": "commitment_session",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -573,12 +553,8 @@
           "name": "transactions_user_id_users_id_fk",
           "tableFrom": "transactions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -586,12 +562,8 @@
           "name": "transactions_commitment_id_commitment_id_fk",
           "tableFrom": "transactions",
           "tableTo": "commitment",
-          "columnsFrom": [
-            "commitment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["commitment_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -661,9 +633,7 @@
         "users_phone_unique": {
           "name": "users_phone_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "phone"
-          ]
+          "columns": ["phone"]
         }
       },
       "policies": {},
@@ -675,22 +645,12 @@
     "public.commitment_type": {
       "name": "commitment_type",
       "schema": "public",
-      "values": [
-        "walk",
-        "run",
-        "sleep",
-        "screentime"
-      ]
+      "values": ["walk", "run", "sleep", "screentime"]
     },
     "public.duration": {
       "name": "duration",
       "schema": "public",
-      "values": [
-        "one_weeks",
-        "two_weeks",
-        "three_weeks",
-        "four_weeks"
-      ]
+      "values": ["one_weeks", "two_weeks", "three_weeks", "four_weeks"]
     },
     "public.frequency": {
       "name": "frequency",
@@ -706,12 +666,7 @@
     "public.transaction_type": {
       "name": "transaction_type",
       "schema": "public",
-      "values": [
-        "stake",
-        "payout",
-        "forfeit",
-        "rake"
-      ]
+      "values": ["stake", "payout", "forfeit", "rake"]
     }
   },
   "schemas": {},
