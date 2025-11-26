@@ -1,25 +1,26 @@
 import { createLogger, format, transports } from 'winston';
+import type { TransformableInfo } from "logform";
+import { requestContext, type RequestContext } from "../context/request.context.ts"
 
-const dev = process.env.NODE_ENV !== 'production';
 
-const devFormat = format.combine(
-  format.colorize(),
-  format.timestamp({ format: 'HH:mm:ss' }),
-  format.errors({ stack: true }),
-  format.printf(info => {
-    const { timestamp, level, message, stack, ...rest } = info;
-    const meta = Object.keys(rest).length ? ` | ${JSON.stringify(rest, null, 2)}` : '';
-    const stackPart = stack ? `\n${stack}` : '';
-    return `${timestamp} ${level}: ${message}${meta}${stackPart}`;
-  })
-);
 
+function loggerFormat(info: TransformableInfo): string {
+    const { reqId, method, path, body } = requestContext.getStore() ?? {};
+    const requestData = `Request Context: ${reqId} ${method} ${path} ${Object.entries(body || {})}`
+    const base = `${info.level} ${info.message}\r\n${reqId ? requestData : ""}\r\n`
+    if (info instanceof Error) {
+        return `${base}\r\n${info.cause}\r\n${info.stack}`
+    }
+    return base
+}
 const logger = createLogger({
-  level: 'info',
-  format: dev
-    ? devFormat
-    : format.combine(format.timestamp(), format.errors({ stack: true }), format.json()),
-  transports: [new transports.Console()]
+    level: 'info',
+    format: format.combine(
+        format.colorize(),
+        format.printf(loggerFormat)
+    ),
+    transports: new transports.Console()
 });
 
-export default logger
+
+export default logger; 

@@ -5,6 +5,7 @@ import { requestLogger } from "./middleware/logger.middleware.ts"
 import { UserRouter, TransactionRouter, CommitmentRouter } from './routes/index.js';
 import errorHandler from "./middleware/error.middleware.ts";
 import logger from "./logger/logger.js";
+import { requestContextMiddleware } from "./middleware/request-context.middleware.ts"
 
 
 const allowedOrigins = process.env.origins!.split(',').map(s => s.trim())
@@ -31,6 +32,7 @@ const corsOptions = {
 const app = express();
 app.use(json())
 app.use(cors(corsOptions))
+app.use(requestContextMiddleware)
 app.use(requestLogger)
 
 app.use("/users", UserRouter);
