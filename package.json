@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx --watch src/server.ts",
-    "build": "esbuild src/server.ts --platform=node --format=esm --outdir=dist --packages=external --sourcemap --outbase=src",
+    "build": "esbuild src/server.ts --bundle --platform=node --format=esm --outdir=dist --packages=external",
     "types": "tsc",
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate"

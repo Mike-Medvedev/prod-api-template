@@ -1,58 +1,79 @@
 import { createLogger, format, transports } from 'winston';
 import type { TransformableInfo } from "logform";
 import { requestContext } from "../context/request.context.ts"
+import path from 'node:path';
 
+const logFile = path.resolve(process.cwd(), 'log.log');
 
+type RequestLogInfo = TransformableInfo & {
+    reqId?: string;
+    method?: string;
+    path?: string;
+    body?: unknown;
+    err?: { cause?: string, stack?: string };
+};
 
-function devFormat(info: TransformableInfo): string {
-    const { reqId, method, path, body } = requestContext.getStore() ?? {};
-    const requestData = `Request Context: ${reqId} ${method} ${path} ${Object.entries(body || {})}`
-    const base = `${info.level} ${info.message}\r\n${reqId ? requestData : ""}\r\n`
-    if (info instanceof Error) {
-        return `${base}\r\n${info.cause}\r\n${info.stack}`
-    }
-    return base
+function devFormat(info: RequestLogInfo): string {
+    const requestMetaData = Object.entries({
+        requestId: info.reqId,
+        method: info.method,
+        path: info.path,
+        body: info.body,
+    }).filter(([, v]) => v !== undefined && v !== null);
+
+    const meta = requestMetaData.length > 0
+        ? `${JSON.stringify(Object.fromEntries(requestMetaData), null, 2)}`
+        : '';
+
+    const lines = [
+        `${info.timestamp} ${info.level} ${info.message}`,
+    ];
+    if (info.err?.cause) lines.push(String(info.err.cause));
+    if (info.err?.stack) lines.push(String(info.err.stack));
+
+    if (meta) lines.push(meta);
+
+    return lines.join('\r\n');
 }
 
 const addRequestContext = format((info) => {
-    const { reqId, method, path } = requestContext.getStore() ?? {};
-    info = { reqId, method, path, ...info };
-    return info
+    const { reqId, method, path, body } = requestContext.getStore() ?? {};
+    return process.env.NODE_ENV === 'production'
+        ? { ...info, reqId, method, path }
+        : { ...info, reqId, method, path, body };
 });
 
-let winstonLogger = {}
-if (process.env.NODE_ENV !== "production") {
-    winstonLogger = {
-        level: 'info',
-        defaultMeta:{
-            service: "lock-in-api",
-            env: process.env.NODE_ENV ?? 'dev'
-        },
-        format: format.combine(
-            format.colorize(),
-            format.printf(devFormat)
-        ),
-        transports: new transports.Console()
-    }
-}
-else {
-    winstonLogger = {
-        level: 'info',
-        defaultMeta:{
-            service: "lock-in-api",
-            env: process.env.NODE_ENV ?? 'dev'
-        },
-        format: format.combine(
-            format.timestamp(),
-            format.errors({ stack: true }),
-            addRequestContext(),
-            format.json()
-        ),
-        transports: new transports.File({ filename: 'log.log', options: { flags: 'w' } }),
-    }
+
+const devLoggerOptions = {
+    level: 'info',
+    format: format.combine(
+        addRequestContext(),
+        format.timestamp({ format: 'YYYY-MM-DD hh:mm:ss A' }),
+        format.colorize(),
+        format.errors({ stack: true }),
+        format.printf(devFormat)
+    ),
+    transports: [new transports.Console()]
 }
 
-const logger = createLogger(winstonLogger);
+const prodLoggerOptions = {
+    level: 'info',
+    defaultMeta: {
+        service: "lock-in-api",
+        env: process.env.NODE_ENV
+    },
+    format: format.combine(
+        addRequestContext(),
+        format.timestamp({ format: 'YYYY-MM-DD hh:mm:ss A' }),
+        format.errors({ stack: true }),
+        format.json()
+    ),
+    transports: [new transports.Console(), new transports.File({ filename: logFile, options: { flags: 'w' } })]
+}
+
+const winstonLoggerOptions = process.env.NODE_ENV !== "production" ? devLoggerOptions : prodLoggerOptions
+
+const logger = createLogger(winstonLoggerOptions);
 
 
 export default logger; 
