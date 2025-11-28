@@ -35,6 +35,12 @@ const corsOptions = {
 };
 
 const app = express();
+
+app.get("/health", (_, res) => {
+  logger.info("healthy");
+  res.status(200).json({ status: "healthy" });
+});
+
 app.use(helmet());
 app.use(cors(corsOptions));
 
