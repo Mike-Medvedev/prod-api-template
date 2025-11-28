@@ -3,7 +3,7 @@ import "../sentry.config.js";
 import express, { json } from "express";
 import cors from "cors";
 import { requestLogger } from "./middleware/logger.middleware.ts";
-import { UserRouter, TransactionRouter, CommitmentRouter } from "./routes/index.ts";
+import { UserRouter } from "./routes/index.ts";
 import errorHandler from "./middleware/error.middleware.ts";
 import logger from "./logger/logger.ts";
 import { requestContextMiddleware } from "./middleware/request-context.middleware.ts";
@@ -38,7 +38,7 @@ const app = express();
 
 app.get("/health", (_, res) => {
   logger.info("healthy");
-  res.status(200).json({ status: "healthy" });
+  res.status(200).json({ status: "healthy endpoint!" });
 });
 
 app.use(helmet());
@@ -49,8 +49,6 @@ app.use(requestContextMiddleware);
 app.use(requestLogger);
 
 app.use("/users", UserRouter);
-app.use("/transactions", TransactionRouter);
-app.use("/commitments", CommitmentRouter);
 
 app.get("/", (_, res) => {
   res.send("Hello World");
