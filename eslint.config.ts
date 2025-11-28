@@ -13,7 +13,7 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
-  ...tseslint.configs.recommended,
+  tseslint.configs.recommended,
   prettierConfig,
   {
     rules: {
