@@ -1,12 +1,16 @@
-Production ready Node JS API template
+# Production Ready Node JS API Template
 
-Express JS API framework
-Zod Runtime Validation
-Supabase Postgres Database
-Drizzle ORM
-Winston Logger
-Sentry Monitoring
+## Backend
 
-Docker for containerization
-Github Actions for Continuous Deployment
-Azure Container Apps for hosting
+- Express JS API framework
+- Zod Runtime Validation
+- Supabase Postgres Database
+- Drizzle ORM
+- Winston Logger
+- Sentry Monitoring
+
+## DevOps
+
+- Docker for containerization
+- GitHub Actions for Continuous Deployment
+- Azure Container Apps for hosting
