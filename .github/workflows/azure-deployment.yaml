@@ -51,6 +51,9 @@ jobs:
     name: Deploy to Azure Container App
     needs: push_to_registry
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Azure Login
         uses: azure/login@v2
