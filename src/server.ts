@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "./config.ts";
 import "../sentry.config.js";
 import express, { json, type NextFunction, type Request, type Response } from "express";
 import cors from "cors";
