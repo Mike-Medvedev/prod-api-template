@@ -50,6 +50,8 @@ const corsOptions = {
 
 const app = express();
 
+app.set("trust proxy", 1); // trust the first reverse proxy which forwards client ip and headers
+
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(limiter);
