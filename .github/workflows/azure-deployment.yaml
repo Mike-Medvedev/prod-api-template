@@ -67,4 +67,4 @@ jobs:
           az containerapp update \
             --name prod-api \
             --resource-group DefaultResourceGroup-EUS \
-            --image medvedevil/production-node-api:latest
+            --image medvedevil/production-node-api:main

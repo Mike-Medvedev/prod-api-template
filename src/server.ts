@@ -38,7 +38,7 @@ const app = express();
 
 app.get("/health", (_, res) => {
   logger.info("healthy");
-  res.status(200).json({ status: "healthy endpoint!" });
+  res.status(200).json({ status: "healthy" });
 });
 
 app.use(helmet());
