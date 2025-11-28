@@ -1,6 +1,6 @@
 import "dotenv/config";
 import "../sentry.config.js";
-import express, { json } from "express";
+import express, { json, type NextFunction, type Request, type Response } from "express";
 import cors from "cors";
 import { requestLogger } from "./middleware/logger.middleware.ts";
 import { UserRouter } from "./routes/index.ts";
@@ -9,8 +9,22 @@ import logger from "./logger/logger.ts";
 import { requestContextMiddleware } from "./middleware/request-context.middleware.ts";
 import { client as pgClient } from "./db/db.ts";
 import helmet from "helmet";
+import { rateLimit, type Options } from "express-rate-limit";
 
-const allowedOrigins = process.env.origins!.split(",").map((s) => s.trim());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  message: { error: "Too many requests, please try again later." },
+  handler: (req: Request, res: Response, _: NextFunction, opts: Options) => {
+    logger.warn(`Client (${req.ip}) has been rate limited`);
+    res.sendStatus(opts.statusCode);
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  ipv6Subnet: 56,
+});
+
+const allowedOrigins = process.env.origins?.split(",").map((s) => s.trim());
 
 if (!allowedOrigins || allowedOrigins.length === 0) {
   logger.error("Failed to start: CORS origins environment variable is missing or empty");
@@ -36,21 +50,22 @@ const corsOptions = {
 
 const app = express();
 
+app.use(helmet());
+app.use(cors(corsOptions));
+app.use(limiter);
+app.use(json());
+app.use(requestContextMiddleware);
+app.use(requestLogger);
+
 app.get("/health", (_, res) => {
   logger.info("healthy");
   res.status(200).json({ status: "healthy" });
 });
 
-app.use(helmet());
-app.use(cors(corsOptions));
-
-app.use(json());
-app.use(requestContextMiddleware);
-app.use(requestLogger);
-
 app.use("/users", UserRouter);
 
-app.get("/", (_, res) => {
+app.get("/", (req, res) => {
+  logger.info(req.ip);
   res.send("Hello World");
 });
 

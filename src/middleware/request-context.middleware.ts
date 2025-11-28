@@ -10,5 +10,5 @@ export function requestContextMiddleware(req: Request, _res: Response, next: Nex
     body: req.body,
   };
   req.id = context.reqId;
-  requestContext.run(context, next);
+  requestContext.run(context, next); //runs express middleware chain and injects request context
 }
