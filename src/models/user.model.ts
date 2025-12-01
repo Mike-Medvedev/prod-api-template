@@ -1,5 +1,5 @@
 import type z from "zod";
-import { users } from "../db/schema.ts";
+import { users } from "@/db/schema.ts";
 import { createSelectSchema } from "drizzle-zod";
 
 export const UserModel = createSelectSchema(users);

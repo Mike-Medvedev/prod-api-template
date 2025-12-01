@@ -1,4 +1,4 @@
-FROM node:22.17.1-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -12,4 +12,4 @@ RUN npm prune --production
 
 EXPOSE 3000
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/bundle.js"]

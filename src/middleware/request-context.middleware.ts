@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { requestContext } from "../context/request.context.ts";
+import { requestContext } from "@/context/request.context.ts";
 import type { Request, Response, NextFunction } from "express";
 
 export function requestContextMiddleware(req: Request, res: Response, next: NextFunction) {

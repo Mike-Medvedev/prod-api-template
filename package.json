@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx --watch src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --format=esm --outdir=dist --packages=external",
+    "build": "node ./esbuild.config.js",
     "types": "tsc",
     "format": "prettier --write . --ignore-path .prettierignore",
     "db:generate": "npx drizzle-kit generate",

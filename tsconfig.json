@@ -8,6 +8,10 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     // For nodejs:
     "lib": ["esnext"],
     "types": ["node"],

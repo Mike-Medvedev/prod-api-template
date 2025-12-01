@@ -1,6 +1,6 @@
-import { db, type DB } from "../db/db.ts";
-import { users } from "../db/schema.ts";
-import { CreateUserModel, type CreateUser } from "../models/user.model.ts";
+import { db, type DB } from "@/db/db.ts";
+import { users } from "@/db/schema.ts";
+import { CreateUserModel, type CreateUser } from "@/models/user.model.ts";
 
 class UserService {
   private readonly _db: DB;

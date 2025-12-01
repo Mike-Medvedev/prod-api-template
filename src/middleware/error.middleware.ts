@@ -1,7 +1,7 @@
 import { DrizzleQueryError } from "drizzle-orm/errors";
 import type { ErrorRequestHandler, Request, Response, NextFunction } from "express";
-import { DatabaseError, UnknownError, ZodError } from "../errors/errors.ts";
-import logger from "../logger/logger.ts";
+import { DatabaseError, UnknownError, ZodError } from "@/errors/errors.ts";
+import logger from "@/logger/logger.ts";
 import z from "zod";
 
 const errorHandler: ErrorRequestHandler = function (

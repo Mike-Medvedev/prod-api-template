@@ -3,12 +3,12 @@ import "./config.ts";
 import "../sentry.config.js";
 import express, { json, type NextFunction, type Request, type Response } from "express";
 import cors from "cors";
-import { requestLogger } from "./middleware/logger.middleware.ts";
-import { UserRouter } from "./routes/index.ts";
-import errorHandler from "./middleware/error.middleware.ts";
-import logger from "./logger/logger.ts";
-import { requestContextMiddleware } from "./middleware/request-context.middleware.ts";
-import { client as pgClient } from "./db/db.ts";
+import { requestLogger } from "@/middleware/logger.middleware.ts";
+import { UserRouter } from "@/routes/index.ts";
+import errorHandler from "@/middleware/error.middleware.ts";
+import logger from "@/logger/logger.ts";
+import { requestContextMiddleware } from "@/middleware/request-context.middleware.ts";
+import { client as pgClient } from "@/db/db.ts";
 import helmet from "helmet";
 import { rateLimit, type Options } from "express-rate-limit";
 

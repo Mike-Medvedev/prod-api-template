@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from "winston";
 import type { TransformableInfo } from "logform";
-import { requestContext } from "../context/request.context.ts";
+import { requestContext } from "@/context/request.context.ts";
 import * as nodePath from "node:path";
 import Transport from "winston-transport";
 import * as Sentry from "@sentry/node";
