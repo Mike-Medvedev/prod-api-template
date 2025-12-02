@@ -8,6 +8,8 @@ const EnvSchema = z
     DATABASE_URL: z.string(),
     SENTRY_KEY: z.string(),
     origins: z.string(),
+    SUPABASE_PROJECT_ID: z.string(),
+    SUPABASE_PUBLISHABLE_API_KEY: z.string(),
   })
   .loose();
 
@@ -17,5 +19,3 @@ if (!parsed.success) {
   logger.error({ message: "Invalid environment variables", err: parsed.error });
   throw new Error("Invalid environment variables see stack trace for details");
 }
-
-export const config = parsed.data;

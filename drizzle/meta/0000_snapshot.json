@@ -1,5 +1,5 @@
 {
-  "id": "4d8d4f81-acd4-4c18-9d84-12604f10af11",
+  "id": "faa699ab-5cdb-49e7-8072-dfe38ac71598",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,20 +10,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "users_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
+          "notNull": true
         },
         "first_name": {
           "name": "first_name",
@@ -43,8 +32,21 @@
           "primaryKey": false,
           "notNull": false
         },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -59,6 +61,11 @@
           "name": "users_phone_unique",
           "nullsNotDistinct": false,
           "columns": ["phone"]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -67,8 +74,8 @@
     }
   },
   "enums": {
-    "public.user_enu,": {
-      "name": "user_enu,",
+    "public.user_enum": {
+      "name": "user_enum",
       "schema": "public",
       "values": ["name", "age"]
     }

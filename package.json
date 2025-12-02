@@ -27,6 +27,7 @@
   "type": "module",
   "dependencies": {
     "@sentry/node": "^10.27.0",
+    "@supabase/supabase-js": "^2.86.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",

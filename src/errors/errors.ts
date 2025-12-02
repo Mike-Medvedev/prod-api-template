@@ -1,5 +1,6 @@
 import type { DrizzleQueryError } from "drizzle-orm/errors";
 import postgres from "postgres";
+import { CustomAuthError } from "@supabase/supabase-js";
 
 const { PostgresError } = postgres;
 
@@ -20,7 +21,12 @@ export class DatabaseError extends Error {
     }
   }
 }
-
+export class AuthTokenMissingError extends CustomAuthError {
+  constructor(message: string, status: number) {
+    super(message, "AuthTokenMissingError", status, "Missing Token");
+  }
+}
+export { AuthInvalidJwtError } from "@supabase/supabase-js";
 export { ZodError } from "zod";
 
 export class UnknownError extends Error {
