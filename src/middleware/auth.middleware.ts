@@ -1,5 +1,5 @@
-import { supabaseClient } from "@/auth/auth";
-import { AuthTokenMissingError, AuthInvalidJwtError } from "@/errors/errors";
+import { userService } from "@/services/user.service";
+import { AuthTokenMissingError } from "@/errors/errors";
 
 import type { Request, Response, NextFunction } from "express";
 
@@ -8,26 +8,11 @@ export async function validateTokenMiddleware(req: Request, _res: Response, next
   if (!authHeader?.startsWith("Bearer ")) {
     throw new AuthTokenMissingError("Missing authorization token", 401);
   }
-
   const token = authHeader.split(" ")[1];
-
   if (!token) {
     throw new AuthTokenMissingError("Missing authorization token", 401);
   }
-
-  const {
-    data: { user },
-    error,
-  } = await supabaseClient.auth.getUser(token);
-
-  if (error) {
-    throw new AuthInvalidJwtError(error.message || "Invalid or expired token");
-  }
-
-  if (!user) {
-    throw new AuthInvalidJwtError("User not found");
-  }
-
+  const user = await userService.validateUser(token);
   req.user = user;
   next();
 }

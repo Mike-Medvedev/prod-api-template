@@ -4,5 +4,5 @@ import { createSelectSchema } from "drizzle-zod";
 
 export const UserModel = createSelectSchema(users);
 
-export const CreateUserModel = UserModel.omit({ id: true, createdAt: true });
+export const CreateUserModel = UserModel.omit({ id: true, createdAt: true, updatedAt: true });
 export type CreateUser = z.infer<typeof CreateUserModel>;

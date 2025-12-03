@@ -26,8 +26,12 @@ export class AuthTokenMissingError extends CustomAuthError {
     super(message, "AuthTokenMissingError", status, "Missing Token");
   }
 }
-export { AuthInvalidJwtError } from "@supabase/supabase-js";
-export { ZodError } from "zod";
+
+export class UserNotFoundError extends CustomAuthError {
+  constructor(message: string) {
+    super(message, "UserNotFoundError", 404, "User Not Found");
+  }
+}
 
 export class UnknownError extends Error {
   constructor(error: unknown) {
@@ -37,3 +41,6 @@ export class UnknownError extends Error {
     if (Error.captureStackTrace) Error.captureStackTrace(this, UnknownError);
   }
 }
+
+export { AuthInvalidJwtError, AuthError } from "@supabase/supabase-js";
+export { ZodError } from "zod";

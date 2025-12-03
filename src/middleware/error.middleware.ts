@@ -6,6 +6,7 @@ import {
   ZodError,
   AuthInvalidJwtError,
   AuthTokenMissingError,
+  AuthError,
 } from "@/errors/errors.ts";
 import logger from "@/logger/logger.ts";
 import z from "zod";
@@ -23,6 +24,10 @@ const errorHandler: ErrorRequestHandler = function (
   if (error instanceof AuthTokenMissingError) {
     logger.error({ message: error.message, err: error });
     return res.status(error.status).json({ message: error.message });
+  }
+  if (error instanceof AuthError) {
+    logger.error({ message: error.message, err: error });
+    return res.status(error.status || 401).json({ message: error.message });
   }
   if (error instanceof DrizzleQueryError) {
     const databaseError = new DatabaseError(error);
