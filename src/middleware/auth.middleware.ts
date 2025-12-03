@@ -1,4 +1,4 @@
-import { userService } from "@/services/user.service";
+import authService from "@/services/auth.service";
 import { AuthTokenMissingError } from "@/errors/errors";
 
 import type { Request, Response, NextFunction } from "express";
@@ -12,7 +12,7 @@ export async function validateTokenMiddleware(req: Request, _res: Response, next
   if (!token) {
     throw new AuthTokenMissingError("Missing authorization token", 401);
   }
-  const user = await userService.validateUser(token);
+  const user = await authService.validateToken(token);
   req.user = user;
   next();
 }

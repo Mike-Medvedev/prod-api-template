@@ -33,6 +33,14 @@ export class UserNotFoundError extends CustomAuthError {
   }
 }
 
+export class HttpError extends Error {
+  status?: number;
+  constructor(message: string, cause: unknown, status?: number) {
+    super(message, { cause: cause });
+    if (status) this.status = status;
+  }
+}
+
 export class UnknownError extends Error {
   constructor(error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);

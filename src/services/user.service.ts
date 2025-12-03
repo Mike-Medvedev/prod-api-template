@@ -1,9 +1,6 @@
 import { db, type DB } from "@/db/db.ts";
 import { users } from "@/db/schema.ts";
 import { CreateUserModel, type CreateUser } from "@/models/user.model.ts";
-import { supabaseClient } from "@/auth/auth";
-import type { User } from "@supabase/supabase-js";
-import { AuthInvalidJwtError, UserNotFoundError } from "@/errors/errors";
 
 class UserService {
   private readonly _db: DB;
@@ -20,20 +17,6 @@ class UserService {
         phone: users.phone,
       });
     return CreateUserModel.parse(newUser);
-  }
-  async validateUser(token: string): Promise<User> {
-    const {
-      data: { user },
-      error,
-    } = await supabaseClient.auth.getUser(token);
-    if (error) {
-      throw new AuthInvalidJwtError(error.message || "Invalid or expired token");
-    }
-
-    if (!user) {
-      throw new UserNotFoundError("User not found");
-    }
-    return user;
   }
 }
 

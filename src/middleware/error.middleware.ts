@@ -7,6 +7,7 @@ import {
   AuthInvalidJwtError,
   AuthTokenMissingError,
   AuthError,
+  HttpError,
 } from "@/errors/errors.ts";
 import logger from "@/logger/logger.ts";
 import z from "zod";
@@ -17,6 +18,10 @@ const errorHandler: ErrorRequestHandler = function (
   res: Response,
   _next: NextFunction,
 ) {
+  if (error instanceof HttpError) {
+    logger.error({ message: error.message, err: error });
+    return res.status(error.status || 400).json({ message: error.message });
+  }
   if (error instanceof AuthInvalidJwtError) {
     logger.error({ message: error.message, err: error });
     return res.status(error.status).json({ message: error.message });
